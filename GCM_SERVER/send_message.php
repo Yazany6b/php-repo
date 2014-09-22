@@ -11,9 +11,9 @@ if(!isset($_SESSION["fname"])){
     die();
 }
 */
-define("IMAGES_LOCATION", "upload/");
-define("IMAGES_COUNT", 6);
-define("PROJECT_URL", "http://androiddev.relaxodasoft.com/OdaiProject/");
+
+include './def_keys_nogit.php';
+
 if (isset($_POST["title"]) && isset($_POST["description"])) {
     
     $title = $_POST["title"];
@@ -30,7 +30,10 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
     //str_replace(" ", "_", $xml);
     file_put_contents("mydata.txt", $xml);
 
-    $registatoin_ids = getReceivers();
+    include_once './db_functions.php';
+    $con= new DB_Functions();
+
+    $registatoin_ids = getReceivers($con);
 
     if(count($registatoin_ids) == 0){
         header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=No%20Users%20Found');
@@ -41,32 +44,31 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
         echo $registatoin_ids[$index] . "<br>";
     }*/
 
-//$log = ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
-//$log = //$log . date('l jS \of F Y h:i:s A') . "\r\n";
+$log = ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
+$log = $log . date('l jS \of F Y h:i:s A') . "\r\n";
     if(count($registatoin_ids) > 1000){
-//$log = //$log . "Send More The 1000 Person\r\n";
+$log = $log . "Send More The 1000 Person\r\n";
         $count = count($registatoin_ids);
         $index = 0;
-//$log = //$log . "Total Count : $count \r\n";
+$log = $log . "Total Count : $count \r\n";
         while($count > 1000){
             $regs = array();
-//$log = //$log . "Sending From $index \r\n";
+$log = $log . "Sending From $index \r\n";
             for($i = $index; $i < $index + 1000 ; $i++)
                 $regs[] = $registatoin_ids[$i];
              
              $index += 1000;
              $count -= 1000;
-//$log = //$log . "Sending To The Group\r\n";
+$log = $log . "Sending To The Group\r\n";
              include_once './GCM.php';
              $gcm = new GCM();
              $result = $gcm->send_notification($regs, array("price" => $xml));
-             $no_regs = decodeResult($result, $regs);
-             
+             //decodeResult($result,$regs,$con);
              unset($gcm);
-//$log = //$log . "The Send Result is : [$result]\r\n\r\n";
+$log = $log . "The Send Result is : [$result]\r\n\r\n";
              sleep(60);//Sleep One Minute
          }
-//$log = //$log . "Sending Extra People about : $count \r\n";
+$log = $log . "Sending Extra People about : $count \r\n";
 
             $regs = array();
             for($i = $index; $i < $index + $count; $i++)
@@ -76,24 +78,26 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
              include_once './GCM.php';
              $gcm = new GCM();
              $result = $gcm->send_notification($regs, array("price" => $xml));
+             //decodeResult($result,$regs,$con);
              unset($gcm);
-//$log = //$log . "Extra Send Result is [$result]\r\n";
+$log = $log . "Extra Send Result is [$result]\r\n";
              }
 
-//$log = //$log . "================================================================\r\n\r\n";
-//file_put_contents("log.txt", //$log);
+$log = $log . "================================================================\r\n\r\n";
+file_put_contents("log.txt", $log);
     header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=The%20Message%20Was%20Sent');
 exit();die();
     }
 
-//$log = //$log . "Normal Send\r\n";
+$log = $log . "Normal Send\r\n";
     include_once './GCM.php';
     $gcm = new GCM();
 
     $result = $gcm->send_notification($registatoin_ids, array("price" => $xml));
-//$log = //$log . "Normal Send Result : [$result]\r\n";
-//$log = //$log . "================================================================\r\n\r\n";
-//file_put_contents("log.txt", //$log,FILE_APPEND);
+     //decodeResult($result,$registatoin_ids,$con);
+$log = $log . "Normal Send Result : [$result]\r\n";
+$log = $log . "================================================================\r\n\r\n";
+file_put_contents("log.txt", $log,FILE_APPEND);
     header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=The%20Message%20Was%20Sent');
 echo "Sent Successfully <br>";
 }
@@ -218,10 +222,8 @@ function storeImages() {
     return $array;
 }
 
-function getReceivers(){
+function getReceivers($db){
     $receivers = array();
-    include_once './db_functions.php';
-    $db = new DB_Functions();
 
     $send_method = $_POST["send_method"];
     
@@ -307,6 +309,7 @@ function getLangs(){
 }
 
 function decodeResult($result , $regs ,$db) {
+return;
     $no_regs = array();
     
     $json = json_decode($result,true);
