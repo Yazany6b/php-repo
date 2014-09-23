@@ -12,7 +12,7 @@ if(!isset($_SESSION["fname"])){
 }
 */
 
-include './def_keys_nogit.php';
+include './sharedkeys.php';
 
 if (isset($_POST["title"]) && isset($_POST["description"])) {
     
