@@ -25,7 +25,7 @@ class DB_Functions {
     public function storeUser($name, $email, $gcm_regid,$region,$lang) {
         
         $region = strtolower(trim($region));
-        $result = mysql_query("select region_id from pro_odai_regions where description = '$region';",$this->connection);
+        $result = mysql_query("select id from region where description = '$region';",$this->connection);
         
         $region_id = 0;
         
@@ -37,7 +37,7 @@ class DB_Functions {
 
         }else{
 
-            mysql_query("insert into pro_odai_regions(description) values('$region')",$this->connection) or die(mysql_error());
+            mysql_query("insert into regions(description) values('$region')",$this->connection) or die(mysql_error());
             $region_id = mysql_insert_id();
         }
 
@@ -54,17 +54,17 @@ class DB_Functions {
 
         }else{
 
-            mysql_query("insert into pro_odai_langs(description) values('$lang')",$this->connection) or die(mysql_error());
+            mysql_query("insert into langs(description) values('$lang')",$this->connection) or die(mysql_error());
             $lang_id = mysql_insert_id();
         }
         
         // insert user into database
-        $result = mysql_query("INSERT INTO pro_odai_devices(name, email, registration_id, region_id,lang_id) VALUES('$name', '$email', '$gcm_regid', $region_id,$lang_id);",$this->connection) or die(mysql_error());
+        $result = mysql_query("INSERT INTO devices(name, email, registration_id, region_id,lang_id) VALUES('$name', '$email', '$gcm_regid', $region_id,$lang_id);",$this->connection) or die(mysql_error());
 
         if ($result) {
             // get user details
             $id = mysql_insert_id(); // last inserted id
-            $result = mysql_query("SELECT * FROM pro_odai_devices WHERE device_id = $id",$this->connection) or die(mysql_error());
+            $result = mysql_query("SELECT * FROM devices WHERE id = $id",$this->connection) or die(mysql_error());
 
             // return user details
             if (mysql_num_rows($result) > 0) {
@@ -96,7 +96,7 @@ class DB_Functions {
     }
 
     public function getUsersByLangId($lang_id) {
-        $result = mysql_query("SELECT registration_id FROM pro_odai_devices WHERE lang_id = $lang_id;");
+        $result = mysql_query("SELECT registration_id FROM devices WHERE lang_id = $lang_id;");
         return $result;
     }
 
@@ -104,7 +104,7 @@ class DB_Functions {
      * Getting all users
      */
     public function getAllUsers() {
-        $result = mysql_query("select * FROM pro_odai_devices");
+        $result = mysql_query("select * FROM devices");
         return $result;
     }
 
@@ -112,7 +112,7 @@ class DB_Functions {
      * Check user is existed or not
      */
     public function isUserExisted($email) {
-        $result = mysql_query("SELECT email from pro_odai_devices WHERE email = '$email'");
+        $result = mysql_query("SELECT email from devices WHERE email = '$email'");
         $no_of_rows = mysql_num_rows($result);
         if ($no_of_rows > 0) {
             // user existed
@@ -126,7 +126,7 @@ class DB_Functions {
      * Getting All regions
      */
     public function getAllRegions(){
-        $result = mysql_query("select * FROM pro_odai_regions");
+        $result = mysql_query("select * FROM regions");
         return $result;
     }
 
@@ -134,23 +134,23 @@ class DB_Functions {
      * Getting All langs
      */
     public function getAllLangs(){
-        $result = mysql_query("select * FROM pro_odai_langs");
+        $result = mysql_query("select * FROM langs");
         return $result;
     }
     public function login($username,$password) {
         $password = md5($password);
-        $result = mysql_query("select * FROM relaxoda_users where username='$username' and password='$password'");
+        $result = mysql_query("select * FROM users where username='$username' and password='$password'");
         
         return $result;
     }
     
     public function getUsersCount(){
-        $arr = mysql_fetch_array(mysql_query("select count(registration_id) as'Users' FROM pro_odai_devices;"));
+        $arr = mysql_fetch_array(mysql_query("select count(registration_id) as'Users' FROM devices;"));
         return $arr["Users"];
     }
     
     function updateRegistrationId($oldid,$newid) {
-        mysql_query("update pro_odai_devices set registration_id='$newid' where registration_id='$oldid';");
+        mysql_query("update devices set registration_id='$newid' where registration_id='$oldid';");
         return mysql_affected_rows();
     }
 }
