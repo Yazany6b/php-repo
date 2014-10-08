@@ -1,14 +1,13 @@
 <?php
 session_start();
 include_once './sharedkeys.php';
-$loc = WEBSITE_URL . 'login.php';
+$loc = 'login.php';
 if(!isset($_SESSION["fname"])){
-    
-    header( 'Location: '.$loc);
+    header( 'Location: ' . PROJECT_URL .$loc);
     die();
 }
 
-if($_SESSION['startup'] != "OdaiProject2/index.php"){
+if($_SESSION['startup'] != "index.php"){
     header( 'Location: '.$loc);
     die();    
 }

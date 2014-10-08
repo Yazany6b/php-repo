@@ -1,7 +1,7 @@
 <?php
 /*
 session_start();
-include_once '../sharedkeys.php';
+include_once './sharedkeys.php';
 $loc = WEBSITE_URL . 'login.php';
 if (!isset($_SESSION["fname"])) {
 
@@ -9,7 +9,7 @@ if (!isset($_SESSION["fname"])) {
     die();
 }
 
-if ($_SESSION['startup'] != "OdaiProject2/index.php") {
+if ($_SESSION['startup'] != "./index.php") {
     header('Location: ' . $loc);
     die();
 }*/
@@ -36,7 +36,7 @@ if (isset($_GET["message"])) {
 
                     function logout(){
                         window.location ='<?php echo 'fuck';/*
-include_once '../sharedkeys.php';
+include_once './sharedkeys.php';
 echo WEBSITE_URL . "kickmeout.php";
 */?>';
                

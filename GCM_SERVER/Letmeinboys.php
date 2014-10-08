@@ -6,7 +6,7 @@ session_start();
 include './sharedkeys.php';
 
 if(isset($_SESSION['startup'])){
-    header("Location: " . WEBSITE_URL . $_SESSION['startup']);
+    header("Location: " . PROJECT_URL . $_SESSION['startup']);
 }
 
 if(isset($_POST['username']) && isset($_POST['password'])){
@@ -16,7 +16,7 @@ if(isset($_POST['username']) && isset($_POST['password'])){
     $result = $db->login($_POST['username'], $_POST['password']);
     
     if($result == null){
-        header("Location:" . WEBSITE_URL . "login.php");
+        header("Location:" . PROJECT_URL . "login.php");
     }
    
     $user_page = "login.php";
@@ -29,9 +29,9 @@ if(isset($_POST['username']) && isset($_POST['password'])){
         $user_page = $row['startup'];
     }
     
-    header("Location:" . WEBSITE_URL . $user_page);
+    header("Location:" . PROJECT_URL . $user_page);
 }else{
-    header("Location:" . WEBSITE_URL . "login.php");
+    header("Location:" . PROJECT_URL . "login.php");
 }
 
 ?>

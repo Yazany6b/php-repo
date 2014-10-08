@@ -3,8 +3,8 @@
 session_save_path("/home/users/web/b1523/ipg.relaxodasoft/cgi-bin/tmp");
 session_start();
 
-include_once '../sharedkeys.php';
-$loc = WEBSITE_URL . 'login.php';
+include './sharedkeys.php';
+$loc = PROJECT_URL . 'login.php';
 if(!isset($_SESSION["fname"])){
     
     header( 'Location: '.$loc);
@@ -12,23 +12,28 @@ if(!isset($_SESSION["fname"])){
 }
 */
 
-include './sharedkeys.php';
-
 if (isset($_POST["title"]) && isset($_POST["description"])) {
-    
+print  "data Received <br>";
+
     $title = $_POST["title"];
     $description = $_POST["description"];
 
+print "Storing The title<br>";
+
     $images = storeImages();
 
-    $xml = '<data><title>'.$title.'</title><description>'.$description.'</description><images>';
-    for($i = 0 ; $i < count($images);$i++)
-        $xml = $xml . '<link><image>' . PROJECT_URL . $images[$i][0] . '</image><thum>' . PROJECT_URL .$images[$i][1].'</thum></link>';
-    
-    $xml = $xml . '</images></data>';
+print "image stored<br>";
 
+    $xml = '<data><title>'.$title.'</title><description>'.$description.'</description><images>';
+    for($i = 0 ; $i < count($images);$i++){
+        $xml .= '<link><image>' . PROJECT_URL . $images[$i][0] . '</image><thum>' . PROJECT_URL . $images[$i][1].'</thum></link>';
+	}
+    
+    $xml .= '</images></data>';
     //str_replace(" ", "_", $xml);
     file_put_contents("mydata.txt", $xml);
+
+print "xml Printed";
 
     include_once './db_functions.php';
     $con= new DB_Functions();
@@ -36,7 +41,7 @@ if (isset($_POST["title"]) && isset($_POST["description"])) {
     $registatoin_ids = getReceivers($con);
 
     if(count($registatoin_ids) == 0){
-        header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=No%20Users%20Found');
+        header( 'Location:' . PROJECT_URL . 'index.php?message=No%20Users%20Found');
         return;
     }
     
@@ -85,7 +90,7 @@ $log = $log . "Extra Send Result is [$result]\r\n";
 
 $log = $log . "================================================================\r\n\r\n";
 file_put_contents("log.txt", $log);
-    header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=The%20Message%20Was%20Sent');
+    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 exit();die();
     }
 
@@ -98,7 +103,7 @@ $log = $log . "Normal Send\r\n";
 $log = $log . "Normal Send Result : [$result]\r\n";
 $log = $log . "================================================================\r\n\r\n";
 file_put_contents("log.txt", $log,FILE_APPEND);
-    header( 'Location:http://androiddev.relaxodasoft.com/OdaiProject/index.php?message=The%20Message%20Was%20Sent');
+    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 echo "Sent Successfully <br>";
 }
 
@@ -108,17 +113,22 @@ function getFileExtension($filename){
     return strtolower($ext);
 }
 
+
 function loadImage($filename){
+
     $ext = getFileExtension($filename);
+print "Load Image " . $ext . " === " . $filename . "<br>";
     switch ($ext){
         case 'jpg':
             return imagecreatefromjpeg($filename);
             break;
-        case 'jpg':
+        case 'jpeg':
             return imagecreatefromjpeg($filename);
             break;
         case 'png':
-            return imagecreatefrompng($filename);
+print "Loading Png THUM<br>";
+            $img = @imagecreatefrompng($filename);
+	    return $img;
             break;
         case 'gif':
             return imagecreatefromgif($filename);
@@ -149,7 +159,7 @@ function saveImage($image , $filename){
             return imagejpeg($image, $filename);
             break;
         case 'png':
-            return imagepng($image, $filename);
+            return imagepng($image, $filename);	    
             break;
         case 'gif':
             return imagegif($image, $filename);
@@ -162,55 +172,92 @@ function saveImage($image , $filename){
 
 function createThum($image_dic , $image_file_name,$width,$height){
 
+				print "Creating Thum<br>";    
     $image = loadImage($image_dic . $image_file_name);
+				print "Creating Thum<br>";    
     $thum = createImageTrueColor($width, $height);
-    
+
+				print "Creating Thum<br>";        
+
     $source_imagex = imagesx($image);
     $source_imagey = imagesy($image);
     imagecopyresized($thum, $image, 0, 0, 0, 0, 
 				$width, $height, $source_imagex, $source_imagey);
-    
+
+				print "Creating Thum<br>";    
+
     saveImage($thum, $image_dic . "thum_" . $image_file_name);
-    
+
+				print "Creating Thum<br>";        
+
     return $image_dic . "thum_" . $image_file_name;
 }
 
 function storeImage($image) {
-    //echo "+----------------------------------------------------------------------------+<br>";
-    //echo "Start Storing [$image]<br>";
+    echo "+----------------------------------------------------------------------------+<br>";
+    include './sharedkeys.php';
+    echo "Start Storing [$image]<br>";
     include_once './Path.php';
     $file_name = Path::getFileNameWithoutExtension($_FILES[$image]['name']);
-    //echo "The Sent File Name [$file_name]<br>";
+    echo "The Sent File Name [$file_name]<br>";
     $name = $file_name;
     include_once './Path.php';
     $extension = Path::getExtension($_FILES[$image]['name']);
-    //echo "The File Extension [$extension]<br>";
+    echo "The File Extension [$extension]<br>";
     
     $index = 0;
-    //echo "Checking File Existance<br>";
+    echo "Checking File Existance<br>";
     while (file_exists(IMAGES_LOCATION . $name . "." . $extension)) {
         $name = $file_name . "_" . $index;
         $index++;
     }
     $file_name = str_replace(' ', '_', $name . "." . $extension);
-    //echo "The Aproved File Name [$file_name]<br>";
+    echo "The Aproved File Name [$file_name]<br>";
+
     $picture = IMAGES_LOCATION . $file_name;
     
-    //echo "Move From Upload To [$picture]<br>";
+    echo "Move From Upload [" . $_FILES[$image]["tmp_name"] ."] To [$picture]<br>";
     move_uploaded_file($_FILES[$image]["tmp_name"], $picture);
     
     $thum = createThum(IMAGES_LOCATION,$file_name,100,100);
-//    echo "A Thum Created At [$thum]<br>";
-  //  echo "Save The Info<br>";
+    echo "A Thum Created At [$thum]<br>";
+    echo "Save The Info<br>";
     
-    $result = array($picture,$thum);
-    //echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br>";
+    $result = array(IMAGES_LOCATION_R . $file_name,IMAGES_LOCATION_R . "thum_" . $file_name);
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br>";
     return $result;
 }
 
+/*
+function storeImage($image) {
 
+    include_once './Path.php';
+    $file_name = Path::getFileNameWithoutExtension($_FILES[$image]['name']);
+
+    $name = $file_name;
+    include_once './Path.php';
+    $extension = Path::getExtension($_FILES[$image]['name']);
+    
+    $index = 0;
+
+    while (file_exists(IMAGES_LOCATION . $name . "." . $extension)) {
+        $name = $file_name . "_" . $index;
+        $index++;
+    }
+    $file_name = str_replace(' ', '_', $name . "." . $extension);
+    $picture = IMAGES_LOCATION . $file_name;
+    
+    move_uploaded_file($_FILES[$image]["tmp_name"], $picture);
+    
+    $thum = createThum(IMAGES_LOCATION,$file_name,100,100);
+    
+    $result = array($picture,$thum);
+
+    return $result;
+}
+*/
 function storeImages() {
-    //echo "------------------------------------------<br>";
+    echo "------------------------------------------<br>";
     $array = array();
     
     for ($index = 1; $index <= count($_FILES); $index++) {
@@ -223,10 +270,14 @@ function storeImages() {
 }
 
 function getReceivers($db){
+
     $receivers = array();
 
     $send_method = $_POST["send_method"];
-    
+
+if(!isset($_POST["send_method"]))   
+	   $send_method = 1;
+
     switch ($send_method){
         case 1:
             $result = $db->getAllUsers();

@@ -7,5 +7,5 @@ unset($_SESSION['status']);
 unset($_SESSION['startup']);
 
 include_once './sharedkeys.php';
-header("Loaction:" . WEBSITE_URL . "login.php");
+header("Location:" .PROJECT_URL . "login.php");
 ?>

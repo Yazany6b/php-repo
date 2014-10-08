@@ -42,7 +42,7 @@ class DB_Functions {
         }
 
         $lang = strtolower(trim($lang));
-        $result = mysql_query("select lang_id from pro_odai_langs where description = '$lang';",$this->connection);
+        $result = mysql_query("select lang_id from langs where description = '$lang';",$this->connection);
         
         $lang_id = 0;
         
@@ -78,7 +78,7 @@ class DB_Functions {
     }
 
     public function deleteUser($regid) {
-        $result = mysql_query("Delete FROM pro_odai_devices WHERE registration_id = '$regid';");
+        $result = mysql_query("Delete FROM devices WHERE registration_id = '$regid';");
         return $result;
     }
 
@@ -86,12 +86,12 @@ class DB_Functions {
      * Get user by email and password
      */
     public function getUserByEmail($email) {
-        $result = mysql_query("SELECT * FROM pro_odai_devices WHERE email = '$email' LIMIT 1");
+        $result = mysql_query("SELECT * FROM devices WHERE email = '$email' LIMIT 1");
         return $result;
     }
     
     public function getUsersByRegionId($region_id) {
-        $result = mysql_query("SELECT registration_id FROM pro_odai_devices WHERE region_id = $region_id;");
+        $result = mysql_query("SELECT registration_id devices WHERE region_id = $region_id;");
         return $result;
     }
 
@@ -104,7 +104,7 @@ class DB_Functions {
      * Getting all users
      */
     public function getAllUsers() {
-        $result = mysql_query("select * FROM devices");
+        $result = mysql_query("select * FROM devices;");
         return $result;
     }
 
