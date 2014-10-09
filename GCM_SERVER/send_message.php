@@ -24,86 +24,79 @@ print "Storing The title<br>";
 
 print "image stored<br>";
 
-    $xml = '<data><title>'.$title.'</title><description>'.$description.'</description><images>';
+    $xml = new SimpleXMLElement('<data/>');
+
+    $xml->addChild('title',$title);
+    $xml->addChild('description',$description);
+
+    $image = $xml->addChild('images');
+
     for($i = 0 ; $i < count($images);$i++){
-        $xml .= '<link><image>' . PROJECT_URL . $images[$i][0] . '</image><thum>' . PROJECT_URL . $images[$i][1].'</thum></link>';
+	  $link = $image->addChild('link');
+	  
+	  $link->addChild('image',PROJECT_URL . $images[$i][0]);
+	  $link->addChild('thum',PROJECT_URL . $images[$i][1]);
 	}
     
-    $xml .= '</images></data>';
-    //str_replace(" ", "_", $xml);
-    file_put_contents("mydata.txt", $xml);
-
-print "xml Printed";
-
     include_once './db_functions.php';
     $con= new DB_Functions();
 
     $registatoin_ids = getReceivers($con);
 
     if(count($registatoin_ids) == 0){
+	 print "No users <br>";
         header( 'Location:' . PROJECT_URL . 'index.php?message=No%20Users%20Found');
         return;
     }
     
-/*    for ($index = 0; $index < count($registatoin_ids); $index++) {
-        echo $registatoin_ids[$index] . "<br>";
-    }*/
-
-$log = ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
-$log = $log . date('l jS \of F Y h:i:s A') . "\r\n";
     if(count($registatoin_ids) > 1000){
-$log = $log . "Send More The 1000 Person\r\n";
         $count = count($registatoin_ids);
         $index = 0;
-$log = $log . "Total Count : $count \r\n";
         while($count > 1000){
             $regs = array();
-$log = $log . "Sending From $index \r\n";
             for($i = $index; $i < $index + 1000 ; $i++)
                 $regs[] = $registatoin_ids[$i];
              
              $index += 1000;
              $count -= 1000;
-$log = $log . "Sending To The Group\r\n";
              include_once './GCM.php';
              $gcm = new GCM();
-             $result = $gcm->send_notification($regs, array("price" => $xml));
+             $result = $gcm->send_notification($regs,json_encode(array("price" => $xml)));
              //decodeResult($result,$regs,$con);
              unset($gcm);
-$log = $log . "The Send Result is : [$result]\r\n\r\n";
              sleep(60);//Sleep One Minute
          }
-$log = $log . "Sending Extra People about : $count \r\n";
+
+	 
+	 print "prepare GCM Message <br>";
 
             $regs = array();
             for($i = $index; $i < $index + $count; $i++)
                 $regs[] = $registatoin_ids[$i];
          
              if(count($regs) > 0){
-             include_once './GCM.php';
-             $gcm = new GCM();
-             $result = $gcm->send_notification($regs, array("price" => $xml));
-             //decodeResult($result,$regs,$con);
-             unset($gcm);
-$log = $log . "Extra Send Result is [$result]\r\n";
+	     	 print "mORE THEN ONE USER <br>";
+             	 include_once './GCM.php';
+             	 $gcm = new GCM();
+             	 $result = $gcm->send_notification($regs,json_encode(array("price" =>  escapeJsonString($xml))));
+             	 decodeResult($result,$regs,$con);
+		unset($gcm);
              }
 
-$log = $log . "================================================================\r\n\r\n";
-file_put_contents("log.txt", $log);
-    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
+//    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 exit();die();
     }
 
-$log = $log . "Normal Send\r\n";
+    print "Les then one users<br>";
+
     include_once './GCM.php';
     $gcm = new GCM();
 
-    $result = $gcm->send_notification($registatoin_ids, array("price" => $xml));
-     //decodeResult($result,$registatoin_ids,$con);
-$log = $log . "Normal Send Result : [$result]\r\n";
-$log = $log . "================================================================\r\n\r\n";
-file_put_contents("log.txt", $log,FILE_APPEND);
-    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
+
+    $result = $gcm->send_notification($registatoin_ids, array("price" => $xml->asXML()));
+	 print "The message decoades <br>";
+
+  //  header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 echo "Sent Successfully <br>";
 }
 
