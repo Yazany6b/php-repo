@@ -33,19 +33,23 @@ class GCM {
             'data' => $message,
         );
 
+print "Prepare the fields <br>";
+
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
             'Content-Type: application/json'
         );
         // Open connection
         $ch = curl_init();
-
+print "Curl inited <br>";
         // Set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
 
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+print "curl enabled <br>";
 
         // Disabling SSL Certificate support temporarly
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -54,12 +58,17 @@ class GCM {
 
         // Execute post
         $result = curl_exec($ch);
-        if ($result === FALSE) {
+        if (!isset($result) || $result === FALSE) {
             die('Curl failed: ' . curl_error($ch));
         }
 
         // Close connection
         curl_close($ch);
+
+	var_dump($result);
+
+	print "<br>Curl closed<br>";
+
         return $result;
     }
 
