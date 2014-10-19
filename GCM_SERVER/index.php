@@ -47,19 +47,47 @@ if($_SESSION['startup'] != "index.php"){
             
             var bytesViewer;
             var area;
+var title;
             
+function calculate(){
+var utf8length = 0;
+                      var string  = area.value + title.value;
+                      for (var n = 0; n < string.length; n++) {
+                          var c = string.charCodeAt(n);
+                          if (c < 128) {
+                              utf8length++;
+                          }
+                          else if((c > 127) && (c < 2048)) {
+                              utf8length = utf8length+2;
+                          }
+                          else {
+                              utf8length = utf8length+3;
+                          }
+                      }
+                      bytesViewer.innerHTML =  utf8length;
+}
             function pageLoaded(){
                 viewMs();
-                
+                title = document.getElementById("myTextTitle");
                 area = document.getElementById("myTextArea");
                 bytesViewer = document.getElementById("bytesView");
                 if (area.addEventListener) {
-                  area.addEventListener('onkeyup', function() {
-                      bytesViewer.innerHTML = bytesCount(area.value.length);
+                  area.addEventListener('keypress', function() {
+                      calculate();
                   }, false);
                 } else if (area.attachEvent) {
-                  area.attachEvent('onchange', function() {
-                    bytesViewer.innerHTML = bytesCount(area.value.length);
+                  area.attachEvent('onpropertychanged', function() {
+                      alert('');
+                  });
+                }
+
+                  if (title.addEventListener) {
+                      title.addEventListener('keypress', function() {
+                      calculate();
+                  }, false);
+                } else if (title.attachEvent) {
+                  title.attachEvent('onchange', function() {
+                      calculate();
                   });
                 }
             }
@@ -77,11 +105,11 @@ if($_SESSION['startup'] != "index.php"){
                                     include_once './db_functions.php';
                                     $db = new DB_Functions();
                                     print $db->getUsersCount();
-                                    $db->close()
+$db->close();
                     ?>
                 </h3>
                 <br>
-                <h3>Total of bytes : <span id="bytesView">0</span> / 4096</h3>
+                <h3>Total of bytes : <span id="bytesView">0</span> / 4096 <i> <a style="color:#267;text-decoration: underline;"  onclick="calculate();"> Refresh</a></i></h3>
                 <br>
             </header>
             <section class="tabs">
@@ -99,7 +127,7 @@ if($_SESSION['startup'] != "index.php"){
                     <div class="content">
                         <div class="content-1">
                             <h3>Title</h3>
-                            <p><input type="text" name="title" size="85" style="z-index: 90;"></p>
+                            <p><input id="myTextTitle" type="text" name="title" size="85" style="z-index: 90;"></p>
                             <h3>Description</h3>
                             <p><textarea id="myTextArea" name="description" rows="15" cols="87"></textarea></p>
                         </div>
