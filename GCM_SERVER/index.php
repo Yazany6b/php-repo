@@ -72,16 +72,16 @@ if($_SESSION['startup'] != "index.php"){
             <header>
                 <h1>Send a new subject</h1>
                 <br><br>
-                <h6>Users Count 
+                <h3>Users Count 
                     <?php 
                                     include_once './db_functions.php';
                                     $db = new DB_Functions();
                                     print $db->getUsersCount();
                                     $db->close()
                     ?>
-                </h6>
+                </h3>
                 <br>
-                <h6>Total of bytes : <span id="bytesView">0</span> / 4096</h6>
+                <h3>Total of bytes : <span id="bytesView">0</span> / 4096</h3>
                 <br>
             </header>
             <section class="tabs">
