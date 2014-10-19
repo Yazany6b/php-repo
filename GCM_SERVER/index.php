@@ -54,11 +54,11 @@ if($_SESSION['startup'] != "index.php"){
                 area = document.getElementById("myTextArea");
                 bytesViewer = document.getElementById("bytesView");
                 if (area.addEventListener) {
-                  area.addEventListener('input', function() {
+                  area.addEventListener('onkeyup', function() {
                       bytesViewer.innerHTML = bytesCount(area.value.length);
                   }, false);
                 } else if (area.attachEvent) {
-                  area.attachEvent('onpropertychange', function() {
+                  area.attachEvent('onchange', function() {
                     bytesViewer.innerHTML = bytesCount(area.value.length);
                   });
                 }
