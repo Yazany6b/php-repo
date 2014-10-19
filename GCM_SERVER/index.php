@@ -24,6 +24,7 @@ if($_SESSION['startup'] != "index.php"){
         <script type="text/javascript" src="js/modernizr.custom.04022.js"></script>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300,300italic' rel='stylesheet' type='text/css'>
         <script type="text/javascript" >
+            
             function viewMs(){
                 <?php
                     if(isset($_GET["message"])){
@@ -39,14 +40,49 @@ if($_SESSION['startup'] != "index.php"){
                 ?>';
                
             }
+            
+            function byteCount(s) {
+                return encodeURI(s).split(/%..|./).length - 1;
+            }
+            
+            var bytesViewer;
+            var area;
+            
+            function pageLoaded(){
+                viewMs();
+                
+                area = document.getElementById("myTextArea");
+                bytesViewer = document.getElementById("bytesView");
+                if (area.addEventListener) {
+                  area.addEventListener('input', function() {
+                      bytesViewer.innerHTML = bytesCount(area.value.length);
+                  }, false);
+                } else if (area.attachEvent) {
+                  area.attachEvent('onpropertychange', function() {
+                    bytesViewer.innerHTML = bytesCount(area.value.length);
+                  });
+                }
+            }
+            
         </script>
     </head>
-    <body onload="viewMs();">
+    <body onload="pageLoaded();">
         <form method="post" action="send_message.php" enctype="multipart/form-data">
         <div class="container">	
             <header>
                 <h1>Send a new subject</h1>
-                <br><br><br><br>
+                <br><br>
+                <h6>Users Count 
+                    <?php 
+                                    include_once './db_functions.php';
+                                    $db = new DB_Functions();
+                                    print $db->getUsersCount();
+                                    $db->close()
+                    ?>
+                </h6>
+                <br>
+                <h6>Total of bytes : <span id="bytesView">0</span> / 4096</h6>
+                <br>
             </header>
             <section class="tabs">
                 <input id="tab-1" style="opacity: 0;" type="radio" name="radio-set" class="tab-selector-1" checked="checked" />
@@ -65,7 +101,7 @@ if($_SESSION['startup'] != "index.php"){
                             <h3>Title</h3>
                             <p><input type="text" name="title" size="85" style="z-index: 90;"></p>
                             <h3>Description</h3>
-                            <p><textarea name="description" rows="15" cols="87"></textarea></p>
+                            <p><textarea id="myTextArea" name="description" rows="15" cols="87"></textarea></p>
                         </div>
                         <div class="content-2" style="overflow:scroll; width: 550px;height: 400px;">
                             <h3>First Image</h3>

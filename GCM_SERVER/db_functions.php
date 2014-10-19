@@ -145,13 +145,17 @@ class DB_Functions {
     }
     
     public function getUsersCount(){
-        $arr = mysql_fetch_array(mysql_query("select count(registration_id) as'Users' FROM devices;"));
-        return $arr["Users"];
+        $arr = mysql_fetch_array(mysql_query("select count(registration_id) FROM devices;"));
+        return $arr[0];
     }
     
     function updateRegistrationId($oldid,$newid) {
         mysql_query("update devices set registration_id='$newid' where registration_id='$oldid';");
         return mysql_affected_rows();
+    }
+    
+    function close(){
+        mysql_close();
     }
 }
 
