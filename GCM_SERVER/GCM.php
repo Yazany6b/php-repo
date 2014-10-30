@@ -65,9 +65,10 @@ print "curl enabled <br>";
         // Close connection
         curl_close($ch);
 
+        print "The GUrl Result --------------------------------- <br>";
 	var_dump($result);
 
-	print "<br>Curl closed<br>";
+	print "<br>--------------------------------Curl closed<br>";
 
         return $result;
     }

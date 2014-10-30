@@ -23,33 +23,38 @@ class DB_Functions {
      * returns user details
      */
     public function storeUser($name, $email, $gcm_regid,$region,$lang) {
-        
+
+        $stlog = "-------------------------------------------------------\n";
+        $stlog .= "Storing User $name , $email , $gcm_regid. $region , $lang \n";
+
+
         $region = strtolower(trim($region));
-        $result = mysql_query("select id from region where description = '$region';",$this->connection);
+        $result = mysql_query("select id from regions where description = '$region';",$this->connection);
         
         $region_id = 0;
         
-        if(mysql_num_rows($result)){
+        if(mysql_num_rows($result) > 0){
 
             while ($row = mysql_fetch_array($result)){
-                $region_id = $row["region_id"];
+                $region_id = $row[0];
             }
 
         }else{
-
             mysql_query("insert into regions(description) values('$region')",$this->connection) or die(mysql_error());
             $region_id = mysql_insert_id();
         }
 
+        $stlog .= "Region id = $region_id\n";
+
         $lang = strtolower(trim($lang));
-        $result = mysql_query("select lang_id from langs where description = '$lang';",$this->connection);
+        $result = mysql_query("select id from langs where description = '$lang';",$this->connection);
         
         $lang_id = 0;
         
         if(mysql_num_rows($result)){
 
             while ($row = mysql_fetch_array($result)){
-                $lang_id = $row["lang_id"];
+                $lang_id = $row[0];
             }
 
         }else{
@@ -57,7 +62,9 @@ class DB_Functions {
             mysql_query("insert into langs(description) values('$lang')",$this->connection) or die(mysql_error());
             $lang_id = mysql_insert_id();
         }
-        
+
+        $stlog .= "Lang id = $lang_id\n";        
+
         // insert user into database
         $result = mysql_query("INSERT INTO devices(name, email, registration_id, region_id,lang_id) VALUES('$name', '$email', '$gcm_regid', $region_id,$lang_id);",$this->connection) or die(mysql_error());
 
@@ -65,14 +72,19 @@ class DB_Functions {
             // get user details
             $id = mysql_insert_id(); // last inserted id
             $result = mysql_query("SELECT * FROM devices WHERE id = $id",$this->connection) or die(mysql_error());
-
             // return user details
             if (mysql_num_rows($result) > 0) {
+                $stlog .= "Inserted Successfuly\n";            
+                file_put_contents("register.log",$stlog,FILE_APPEND);
                 return mysql_fetch_array($result);
             } else {
+                $stlog .= "Unable to Insert\n";
+                file_put_contents("register.log",$stlog,FILE_APPEND);
                 return false;
             }
         } else {
+        $stlog .= "Unable to Insert\n";
+        file_put_contents("register.log",$stlog,FILE_APPEND);
             return false;
         }
     }

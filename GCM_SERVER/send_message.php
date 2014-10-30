@@ -45,7 +45,7 @@ print "image stored<br>";
 
     if(count($registatoin_ids) == 0){
 	 print "No users <br>";
-        header( 'Location:' . PROJECT_URL . 'index.php?message=No%20Users%20Found');
+     //header( 'Location:' . PROJECT_URL . 'index.php?message=No%20Users%20Found');
         return;
     }
     
@@ -83,7 +83,7 @@ print "image stored<br>";
 		unset($gcm);
              }
 
-    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
+             //header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 exit();die();
     }
 
@@ -96,7 +96,7 @@ exit();die();
     $result = $gcm->send_notification($registatoin_ids, array("price" => $xml->asXML()));
 	 print "The message decoades <br>";
 
-    header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
+     //header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
 echo "Sent Successfully <br>";
 }
 

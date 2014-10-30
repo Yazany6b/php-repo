@@ -31,6 +31,7 @@ if (isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["regId"])) {
     $email = $_POST["email"];
     $gcm_regid = $_POST["regId"]; // GCM Registration ID
     $lang = isset($_POST["lang"]) ? $_POST["lang"] : "unkown";
+
     $region = isset($_POST["region"]) ? $_POST["region"] : "unkown";
 
     // Store user details in db

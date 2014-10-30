@@ -24,7 +24,14 @@ if($_SESSION['startup'] != "index.php"){
         <script type="text/javascript" src="js/modernizr.custom.04022.js"></script>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300,300italic' rel='stylesheet' type='text/css'>
         <script type="text/javascript" >
-            
+
+    
+    var projectUrl = <?php
+
+    include_once './sharedkeys.php';
+print "\"" . PROJECT_URL . "\"";
+    
+ ?>;
             function viewMs(){
                 <?php
                     if(isset($_GET["message"])){
@@ -49,9 +56,19 @@ if($_SESSION['startup'] != "index.php"){
             var area;
 var title;
             
+function getFilesText(){
+    var txt = "";
+    for(var i=1;i<=6;i++){
+        if(document.getElementById("file_"+i).value != ""){
+            txt = txt + projectUrl;
+        }
+    }
+    return txt;
+}
+
 function calculate(){
 var utf8length = 0;
-                      var string  = area.value + title.value;
+var string  = area.value + title.value + getFilesText();
                       for (var n = 0; n < string.length; n++) {
                           var c = string.charCodeAt(n);
                           if (c < 128) {
@@ -129,21 +146,21 @@ $db->close();
                             <h3>Title</h3>
                             <p><input id="myTextTitle" type="text" name="title" size="85" style="z-index: 90;"></p>
                             <h3>Description</h3>
-                            <p><textarea id="myTextArea" name="description" rows="15" cols="87"></textarea></p>
+                            <p style="overflow:scroll;" ><textarea id="myTextArea" name="description" rows="15" cols="87" style="width:100%;"></textarea></p>
                         </div>
                         <div class="content-2" style="overflow:scroll; width: 550px;height: 400px;">
                             <h3>First Image</h3>
-                            <p><input type="file" name="image1"></p>
+                            <p><input id="file_1" onchange="calculate();"  type="file" name="image1"></p>
                             <h3>Second Image</h3>
-                            <p><input type="file" name="image2"></p>
+                            <p><input id="file_2" onchange="calculate();" type="file" name="image2"></p>
                             <h3>Third Image</h3>
-                            <p><input type="file" name="image3"></p>
+                            <p><input id="file_3" onchange="calculate();" type="file" name="image3"></p>
                             <h3>Fourth Image</h3>
-                            <p><input type="file" name="image4"></p>
+                            <p><input id="file_4" onchange="calculate();" type="file" name="image4"></p>
                             <h3>Fifth Image</h3>
-                            <p><input type="file" name="image5"></p>
+                            <p><input id="file_5" onchange="calculate();" type="file" name="image5"></p>
                             <h3>Sixth Image</h3>
-                            <p><input type="file" name="image6"></p>
+                            <p><input id="file_6" onchange="calculate();" type="file" name="image6"></p>
                         </div>
                         <div class="content-3">
                             <?php
@@ -175,8 +192,8 @@ $db->close();
                 
             </section>
         </div>
-            <input type="button" onclick="logout();" value="Logout" style="position: absolute;left: 960px;top: 560px;" />
-        <input type="submit" style="position: absolute;left: 1000px;top: 560px;" /> 
+            <input type="button" onclick="logout();" value="Logout" style="position: absolute;left: 900px;top: 760px;" />
+        <input type="submit" style="position: absolute;left: 1000px;top: 760px;" /> 
         </form>
     </body>
 </html>
