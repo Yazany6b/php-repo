@@ -8,10 +8,10 @@ $json = array();
  * Store reg id in users table
  */
 
-if (isset($_POST["oldregId"]) && isset($_POST["regId"])) {
-    
-    $gcm_regid = $_POST["regId"]; 
-    $oldgcm_regid = $_POST["oldregId"]; 
+if (isset($_REQUEST["oldregId"]) && isset($_REQUEST["regId"])) {
+
+    $gcm_regid = $_REQUEST["regId"]; 
+    $oldgcm_regid = $_REQUEST["oldregId"]; 
     
     include_once './db_functions.php';
     //include_once './GCM.php';

@@ -121,6 +121,13 @@ class DB_Functions {
     }
 
     /**
+     * Getting all users
+     */
+    public function getUsersOfCond($cond) {
+        $result = mysql_query("select * FROM devices where $cond;");
+        return $result;
+    }
+    /**
      * Check user is existed or not
      */
     public function isUserExisted($email) {
@@ -162,7 +169,7 @@ class DB_Functions {
     }
     
     function updateRegistrationId($oldid,$newid) {
-        mysql_query("update devices set registration_id='$newid' where registration_id='$oldid';");
+        mysql_query("update devices set registration_id='$newid' ,last_update=now() where registration_id='$oldid';");
         return mysql_affected_rows();
     }
     

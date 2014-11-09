@@ -87,7 +87,7 @@ print "image stored<br>";
 exit();die();
     }
 
-    print "Les then one users<br>";
+    print "Less then one thounsend  users [" . count($registatoin_ids)  . "]<br>";
 
     include_once './GCM.php';
     $gcm = new GCM();
@@ -265,6 +265,31 @@ function storeImages() {
 function getReceivers($db){
 
     $receivers = array();
+
+    if(isset($_POST["users_ids"]) && $_POST["users_ids"] != ""){
+        print "Spacific ids = " . $_POST["users_ids"] . "<br>";
+       $arr = explode(";",$_POST["users_ids"]);
+       $ids = "";
+       for($i = 0; $i < count($arr); $i++){
+           if($arr[$i] != "")
+           {
+               if($i == 0){
+                   $ids = "id=" . $arr[$i];
+               }else{
+                   $ids .= " or id=" . $arr[$i];
+               }
+           }
+       }
+
+            $result = $db->getUsersOfCond($ids);
+            while ($row = mysql_fetch_array($result)){
+                $receivers[] = $row["registration_id"];
+                        print "selected  = " . $row["registration_id"] . "<br>";
+            }
+       
+
+       if(count($receivers) > 0) return $receivers;
+    }
 
     $send_method = $_POST["send_method"];
 

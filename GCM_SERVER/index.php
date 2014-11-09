@@ -127,7 +127,8 @@ $db->close();
                 </h3>
                 <br>
                 <h3>Total of bytes : <span id="bytesView">0</span> / 4096 <i> <a style="color:#267;text-decoration: underline;"  onclick="calculate();"> Refresh</a></i></h3>
-                <br>
+    <input type="text" name="users_ids" value="" size="60" placeholder="enter ids separate them with sime colon (;)"/>
+                <br><br><br>
             </header>
             <section class="tabs">
                 <input id="tab-1" style="opacity: 0;" type="radio" name="radio-set" class="tab-selector-1" checked="checked" />
