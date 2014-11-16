@@ -7,6 +7,7 @@ $json = array();
  * Registering a user device
  * Store reg id in users table
  */
+date_default_timezone_set('UTC');
 
 if (isset($_REQUEST["oldregId"]) && isset($_REQUEST["regId"])) {
 
@@ -23,6 +24,13 @@ if (isset($_REQUEST["oldregId"]) && isset($_REQUEST["regId"])) {
         die('1');
     }
     
+    $result = "------------------------------------------------------------------\n";
+    $result .= "FAIL to update reg at " . date("Y-m-d H:i:s") . "\n";
+    $result .= "OLD : " . $oldgcm_regid . "\n";    
+    $result .= "NEW : " . $gcm_regid . "\n";
+
+    file_put_contents("updates_log.log", $result, FILE_APPEND | LOCK_EX);
+
     die('0');
 }
 
