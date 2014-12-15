@@ -1,18 +1,1 @@
-<data>
-	<title>Welcome</title> 
-	<description>Thank you for installing the app you will now receive a notifications that carries the most amazing news , places and other stuff.</description>
-	<images>
-		<link>
-			<image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/1.JPG</image>
-			<thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_1.JPG</thum>
-		</link>
-		<link>
-			<image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/2.JPG</image>
-			<thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_2.JPG</thum>
-		</link>
-		<link>
-			<image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/3.JPG</image>
-			<thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_3.JPG</thum>
-		</link>
-	</images>
-</data>
+<data><title>Welcome</title><description>Thank you for installing the app you will now receive a notifications that carries the most amazing news , places and other stuff.</description><images><link><image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/1.JPG</image><thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_1.JPG</thum></link><link><image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/2.JPG</image><thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_2.JPG</thum></link><link><image>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/3.JPG</image><thum>http://ec2-54-68-66-205.us-west-2.compute.amazonaws.com/php-repo/GCM_SERVER/wm/thum_3.JPG</thum></link></images></data>

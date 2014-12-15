@@ -51,12 +51,36 @@ if (isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["regId"])) {
 
     $res = $db->storeUser($name, $email, $gcm_regid,$region,$lang);
     $registatoin_ids = array($gcm_regid);
-	$xml = file_get_contents("wm.xml");
-    $message = array("Price" => $xml);
 
-	print $message;
+    include './sharedkeys.php';
+
+    $xml = new SimpleXMLElement('<data/>');
+
+    $xml->addChild('title',"Welcome");
+    $xml->addChild('description',"Thank you for installing the app you will now receive a notifications that carries the most amazing news , places and other stuff.");
+
+    $image = $xml->addChild('images');
+
+    $link = $image->addChild('link');
+          
+    $link->addChild('image',PROJECT_URL . "1.JPG");
+    $link->addChild('thum',PROJECT_URL . "thum_1.JPG");
+
+    $link = $image->addChild('link');
+          
+    $link->addChild('image',PROJECT_URL . "2.JPG");
+    $link->addChild('thum',PROJECT_URL . "thum_2.JPG");
+
+    $link = $image->addChild('link');
+          
+    $link->addChild('image',PROJECT_URL . "3.JPG");
+    $link->addChild('thum',PROJECT_URL . "thum_3.JPG");
+
+    $message = array("price" => $xml);
+
+	var_dump($message);
 	
-    $result = $gcm->send_notification($registatoin_ids, $message);
+    $result = $gcm->send_notification($registatoin_ids,$message);
 
     echo $result;
 } else {
