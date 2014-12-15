@@ -50,10 +50,12 @@ if (isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["regId"])) {
     $gcm = new GCM();
 
     $res = $db->storeUser($name, $email, $gcm_regid,$region,$lang);
-    return;
     $registatoin_ids = array($gcm_regid);
-    $message = array("Price" => "<data><title>Welcome</title> <description>Thank you for installing the app you will now receive a notifications that carries the most amazing news , places and other stuff.</description></data>");
+	$xml = file_get_contents("wm.xml");
+    $message = array("Price" => $xml);
 
+	print $message;
+	
     $result = $gcm->send_notification($registatoin_ids, $message);
 
     echo $result;
