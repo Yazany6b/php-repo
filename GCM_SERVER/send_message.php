@@ -61,7 +61,7 @@ print "image stored<br>";
              $count -= 1000;
              include_once './GCM.php';
              $gcm = new GCM();
-             $result = $gcm->send_notification($regs,json_encode(array("price" => $xml)));
+             $result = $gcm->send_notification($regs,array("price" => $xml));
              //decodeResult($result,$regs,$con);
              unset($gcm);
              sleep(60);//Sleep One Minute
@@ -78,7 +78,7 @@ print "image stored<br>";
 	     	 print "mORE THEN ONE USER <br>";
              	 include_once './GCM.php';
              	 $gcm = new GCM();
-             	 $result = $gcm->send_notification($regs,json_encode(array("price" =>  escapeJsonString($xml))));
+             	 $result = $gcm->send_notification($regs,array("price" =>  $xml));
              	 decodeResult($result,$regs,$con);
 		unset($gcm);
              }
@@ -93,7 +93,7 @@ exit();die();
     $gcm = new GCM();
 
 
-    $result = $gcm->send_notification($registatoin_ids, array("price" => $xml->asXML()));
+    $result = $gcm->send_notification($registatoin_ids, array("price" => $xml));
 	 print "The message decoades <br>";
 
      //header( 'Location:' . PROJECT_URL . 'index.php?message=The%20Message%20Was%20Sent');
